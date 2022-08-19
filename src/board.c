@@ -119,7 +119,7 @@ void placeSpotOnBoard(struct Board *board, struct Position *pos, int spot){
 }
 
 // Checks if two sprites are adjacent
-int isSpriteAdjacent(struct Board *board, struct Position *p1, struct Position *p2){
+int isSpriteAdjacent(struct Board *board, struct Position *p1, struct Position *p2, char sprite){
     if(!p1){
         printf("Position 1 is null");
         exit(1);
@@ -133,24 +133,21 @@ int isSpriteAdjacent(struct Board *board, struct Position *p1, struct Position *
         int y2 = p2->y;
         int x2 = p2->x;
 
+        // Checks if values are in-bounds of the array
         if(y1+1<=2 || x1+1<=2 || x1-1>=2){
             // Is sprite to bottom right
             if((y1+1) == y2 && (x1+1) == x2){
                 return 1;
             } else if((y1+1) == y2 && (x1-1) == x2){ // Is sprite to bottom left
                 return 1;
-            } else {
-                return 0;
             }
-        } else {
-            return 0; // False by default if cannot access spot on board
         }
     }
 
     return 0;
 }
 
-int isSpriteBeside(struct Board *board, struct Position *p1, struct Position *p2){
+int isSpriteBeside(struct Board *board, struct Position *p1, struct Position *p2, char sprite){
     if(!p1){
         printf("Position 1 is null");
         exit(1);
@@ -164,18 +161,14 @@ int isSpriteBeside(struct Board *board, struct Position *p1, struct Position *p2
         if(x1+1 <= 2){
             if(x1+1 == x2){
                 return 1;
-            } else {
-                return 0;
             }
-        } else {
-            return 0; // False by default if cannot access spot on board
         }
     }
 
     return 0;
 };
 
-int isSpriteBelow(struct Board *board, struct Position *p1, struct Position *p2){
+int isSpriteBelow(struct Board *board, struct Position *p1, struct Position *p2, char sprite){
     if(!p1){
         printf("Position 1 is null");
         exit(1);
@@ -184,30 +177,39 @@ int isSpriteBelow(struct Board *board, struct Position *p1, struct Position *p2)
         exit(1);
     } else {
         int y1 = p1->y;
+        int x1 = p1->x;
 
         int y2 = p2->y;
+        int x2 = p2->x;
 
         if(y1+1<=2){
-            if(y1+1 == y2){
-                return 1;
-            } else {
-                return 0;
+            if(y1+1 == y2 && x1 == x2){
+                if(board->board[y2][x2] == sprite){
+                    return 1;
+                }
             }
-        } else {
-            return 0; // False by default if cannot access spot on board
         }
     };
 
     return 0;
 }
 
-// Checks if a player sprite won. Should only do this if 3 or more sprites are present on the board to prevent unnecessary work
+// Checks if a row is filled with sprites
+// 0 is down, 1 right, 2 is adjacent, 3 is opposite adjacent
+int isRowFull(struct Board *board, int row, int direction,char sprite){
+    
+}
+
+// Checks if a player sprite won. We run this everytime so we don't have to reset variables which could cause issues
 int didSpriteWin(struct Board *board, char sprite){
     //TODO:Implement a better solution with less loops maybe
+    //TODO:Use isSprite functions
     // Check adjacent matches
     int adj_count = 0; // Counts adjacent matches
+    int ver_count = 0;
 
     while(true){
+        // Checks adjacent tiles
         for(int y = 0; y < board->height; y++){
             for(int x = 0; x < board->length;x++){
                 if(x == 0){
@@ -228,11 +230,12 @@ int didSpriteWin(struct Board *board, char sprite){
             }
         }
         if(adj_count == 3){
-            break;
+            return 1;
         }
 
         adj_count = 0;
-
+        
+        // Checks opposite adjacent tiles
         for(int y = 0; y < board->height; y++){
             for(int x = 0; x < board->length; x++){
                 if(x == 2){
@@ -254,11 +257,50 @@ int didSpriteWin(struct Board *board, char sprite){
         }
 
         if(adj_count == 3){
-            break;
+            return 1;
+        }
+
+        // Checks each horizontal row(s)
+        for(int y = 0; y < board->height; y++){
+            for(int x = 0; x < board->length; x++){
+                if(board->board[y][x] == sprite){
+                    ver_count += 1;
+                }
+            }
+
+            if(ver_count == 3){
+                return 1;
+            } else {
+                ver_count = 0;
+            }
+        }
+
+        ver_count = 0;
+        
+        // Checks each vertical row(s)
+        for(int y = 0; y < board->height; y++){
+            
         }
 
         return 0;
     }
+}
 
-    return 1;
+// Checks if entire board is filled
+int isBoardFull(struct Board *board){
+    int count = 0;
+
+    for(int y = 0; y < board->height; y++){
+        for(int x = 0; x < board->length; x++){
+            if(board->board[y][x] != '-'){
+                count += 1;
+            }
+        }
+    }
+
+    if(count >= (board->height * board->length)){
+        return 1;
+    } else {
+        return 0;
+    }
 }

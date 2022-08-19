@@ -17,11 +17,12 @@ int main()
     while(done != 1){
         showBoard(&board);
         
-        if(turns_done >= 3){
-            if(didSpriteWin(&board,'@') == 1){
-                printf("You win!\n");
-                done = 1;
-            }
+        if(didSpriteWin(&board,'@')){
+            printf("You win!\n");
+            done = 1;
+        } else if(isBoardFull(&board)){
+            printf("No one won\n");
+            done = 1;
         } else {
             int choice;
 
@@ -34,7 +35,7 @@ int main()
                 struct Position pos = {-1,-1};
                 getSpotOnBoard(&pos,choice);
                 
-                if(spotIsEmpty(&board,&pos,choice) == 1){ // Checks if true
+                if(spotIsEmpty(&board,&pos,choice)){ // Checks if true
                     placeSpotOnBoard(&board,&pos,choice);
                     turns_done += 1;
                 } else {

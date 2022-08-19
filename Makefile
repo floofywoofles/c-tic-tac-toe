@@ -10,3 +10,6 @@ play:
 
 debug:
 	gdb ./build/game
+	
+valgrind-debug:
+	valgrind ./build/game

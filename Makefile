@@ -13,3 +13,7 @@ debug:
 	
 valgrind-debug:
 	valgrind ./build/game
+
+push:
+	git push upstream --force
+	git push origin --force

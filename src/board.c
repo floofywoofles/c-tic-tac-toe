@@ -105,13 +105,15 @@ int spotIsEmpty(struct Board *board, struct Position *pos, int spot){
     }
 };
 
-void placeSpotOnBoard(struct Board *board, struct Position *pos, int spot){
-    getSpotOnBoard(pos, spot);
+void placeSpotOnBoard(struct Board *board, struct Position *pos, int spot, char sprite){
+    if(spot > -1){
+        getSpotOnBoard(pos, spot);
+    }
     int y = pos->y;
     int x = pos->x;
 
     if(pos){
-        board->board[y][x] = '@';
+        board->board[y][x] = sprite;
     } else {
         printf("Pos (in placement) is null");
         exit(1);
@@ -190,6 +192,22 @@ int isSpriteBelow(struct Board *board, struct Position *p1, struct Position *p2,
             }
         }
     };
+
+    return 0;
+}
+
+int isPositionTaken(struct Board *board, struct Position *pos){
+    if(board && pos){
+        int y = pos->y;
+        int x = pos->x;
+
+        if(board->board[y][x] != '-'){
+            return 1;
+        }
+    } else {
+        printf("Board and/or pos is null\n");
+        exit(1);
+    }
 
     return 0;
 }

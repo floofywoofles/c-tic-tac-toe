@@ -105,13 +105,15 @@ int spotIsEmpty(struct Board *board, struct Position *pos, int spot){
     }
 };
 
-void placeSpotOnBoard(struct Board *board, struct Position *pos, int spot){
-    getSpotOnBoard(pos, spot);
+void placeSpotOnBoard(struct Board *board, struct Position *pos, int spot, char sprite){
+    if(spot > -1){
+        getSpotOnBoard(pos, spot);
+    }
     int y = pos->y;
     int x = pos->x;
 
     if(pos){
-        board->board[y][x] = '@';
+        board->board[y][x] = sprite;
     } else {
         printf("Pos (in placement) is null");
         exit(1);
@@ -194,8 +196,25 @@ int isSpriteBelow(struct Board *board, struct Position *p1, struct Position *p2,
     return 0;
 }
 
+int isPositionTaken(struct Board *board, struct Position *pos){
+    if(board && pos){
+        int y = pos->y;
+        int x = pos->x;
+
+        if(board->board[y][x] != '-'){
+            return 1;
+        }
+    } else {
+        printf("Board and/or pos is null\n");
+        exit(1);
+    }
+
+    return 0;
+}
+
 // Checks if a row is filled with sprites
 // 0 is down, 1 right, 2 is adjacent, 3 is opposite adjacent
+// Will use this at some point to replace current implementation for didSpriteWin
 int isRowFull(struct Board *board, int row, int direction,char sprite){
     
 }
@@ -278,8 +297,19 @@ int didSpriteWin(struct Board *board, char sprite){
         ver_count = 0;
         
         // Checks each vertical row(s)
-        for(int y = 0; y < board->height; y++){
-            
+        for(int y = 0; y < board->length; y++){
+            if(board->board[0][y] == sprite){
+                if(board->board[1][y] == sprite && board->board[2][y] == sprite){
+                    ver_count = 3;
+                    break;
+                }
+            }
+        }
+
+        if(ver_count == 3){
+            return 1;
+        } else {
+            ver_count = 0;
         }
 
         return 0;

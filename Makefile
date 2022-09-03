@@ -1,15 +1,15 @@
 build:
 	mkdir build
-	gcc -g ./src/* -o build/game
+	gcc -g ./src/* -o build/game.out
 
 clean:
 	rm -r build
 
 play:
-	./build/game
+	./build/game.out
 
 debug:
-	gdb ./build/game
+	gdb ./build/game.out
 	
 valgrind-debug:
-	valgrind ./build/game
+	valgrind ./build/game.out

@@ -216,7 +216,7 @@ int isPositionTaken(struct Board *board, struct Position *pos){
 // 0 is down, 1 right, 2 is adjacent, 3 is opposite adjacent
 // Will use this at some point to replace current implementation for didSpriteWin
 int isRowFull(struct Board *board, int row, int direction,char sprite){
-    
+    return 0;
 }
 
 // Checks if a player sprite won. We run this everytime so we don't have to reset variables which could cause issues

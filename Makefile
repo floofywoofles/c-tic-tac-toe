@@ -1,6 +1,6 @@
 build:
 	mkdir build
-	gcc -g ./src/* -o build/game.out
+	gcc ./src/*.c -o build/game.out
 
 clean:
 	rm -r build
